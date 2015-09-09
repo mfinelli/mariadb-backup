@@ -34,6 +34,10 @@ if [[ -z "$BUCKET" ]]; then
     exit 1
 fi
 
+command -v mysqldump >/dev/null 2>&1 || { \
+    echo >&2 "Mysqldump does not seem to be available!"; exit 1; \
+}
+
 command -v s3cmd >/dev/null 2>&1 || { \
     echo >&2 "S3cmd is not installed. Aborting!"; exit 1; \
 }
