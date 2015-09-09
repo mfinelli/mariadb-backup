@@ -47,3 +47,26 @@ if [ ! -f ~/.s3cfg ]; then
     echo >&2 "S3cmd has not been configured yet. Aborting!"
     exit 2
 fi
+
+for db in "${DBS[@]}"; do
+    echo "Backing up database: ${db}."
+
+    mysqldump \
+        --add-locks \
+        --comments \
+        --complete-insert \
+        --create-options \
+        --dump-date \
+        --extended-insert \
+        --force \
+        --quote-names \
+        "$db" > "$db.sql"
+
+    # Inspect pre- and post-gzip filesizes.
+    ls -lh | grep "$db.sql"
+    gzip --best "$db.sql"
+    ls -lh | grep "$db.sql.gz"
+
+    gpg --cipher-algo AES256 --symmetric --yes --batch \
+        --passphrase="$PASSPHRASE" "$db.sql.gz"
+done
