@@ -49,6 +49,12 @@ user=backupuser
 password=backupuserpassword
 ```
 
+### MariDB/MySQL
+
+I recommend setting up a separate user just for backing up your databases.
+This user will need the `SELECT` and `LOCK TABLES` permissions for every
+database that you intend to have them backup.
+
 ## Usage
 
 Running a backup is easy! After configuring everything just run the
