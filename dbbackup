@@ -33,3 +33,13 @@ if [[ -z "$BUCKET" ]]; then
     echo >&2 "You must specify an s3 bucket for uploading!"
     exit 1
 fi
+
+command -v s3cmd >/dev/null 2>&1 || { \
+    echo >&2 "S3cmd is not installed. Aborting!"; exit 1; \
+}
+
+# Make sure s3cmd has been configured.
+if [ ! -f ~/.s3cfg ]; then
+    echo >&2 "S3cmd has not been configured yet. Aborting!"
+    exit 2
+fi

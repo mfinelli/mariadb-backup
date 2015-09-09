@@ -2,6 +2,18 @@
 
 Backup MariaDB/MySQL databases to S3.
 
+## Dependencies
+
+### s3cmd
+
+[s3cmd](https://github.com/s3tools/s3cmd) is used to actually upload the
+backups to AWS, so you will need to install and configure it first. Install
+it with your favorite package manager and then configure with:
+
+```shell
+$ s3cmd --configure
+```
+
 ## Configuration
 
 Configuration for the database backup  is saved in your home directory in the
