@@ -43,7 +43,7 @@ user is configured in one of the standard locations: `/etc/my.cnf`,
 to make sure the values are set but if they aren't then `mysqldump` will
 obviously fail.
 
-```
+```ini
 [mysqldump]
 user=backupuser
 password=backupuserpassword
