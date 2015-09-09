@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Get the local configuration
+source ~/.dbbackup
+
+if [[ -z ${PASSPHRASE+x} ]]; then
+    echo >&2 "You must configure an encryption password!"
+    exit 1
+fi
+
+if [[ ${#DBS[@]} -lt 1 ]]; then
+    echo >&2 "You must specify at least one database to backup!"
+    exit 1
+fi
+
+if [[ -z "$BUCKET" ]]; then
+    echo >&2 "You must specify an s3 bucket for uploading!"
+    exit 1
+fi
