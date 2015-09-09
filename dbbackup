@@ -70,6 +70,8 @@ for db in "${DBS[@]}"; do
     gpg --cipher-algo AES256 --symmetric --yes --batch \
         --passphrase="$PASSPHRASE" "$db.sql.gz"
 
+    rm "$db.sql.gz"
+
     today=$(date +%Y%m%d)
     saveas="${db}-${today}.sql.gz.gpg"
 
@@ -79,4 +81,6 @@ for db in "${DBS[@]}"; do
         --server-side-encryption \
         "${db}.sql.gz.gpg" \
         s3://"$BUCKET"/"$saveas"
+
+    rm "${db}.sql.gz.gpg"
 done
