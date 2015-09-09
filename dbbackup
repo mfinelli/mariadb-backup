@@ -48,6 +48,13 @@ if [ ! -f ~/.s3cfg ]; then
     exit 2
 fi
 
+WORKDIR=$(mktemp -d) || { \
+    echo >&2 "Could not create temporary directory."; exit 1; \
+}
+
+cd /tmp
+cd "$WORKDIR"
+
 for db in "${DBS[@]}"; do
     echo "Backing up database: ${db}."
 
@@ -84,3 +91,6 @@ for db in "${DBS[@]}"; do
 
     rm "${db}.sql.gz.gpg"
 done
+
+cd ../
+rmdir "$WORKDIR"
