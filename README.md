@@ -48,3 +48,26 @@ obviously fail.
 user=backupuser
 password=backupuserpassword
 ```
+
+## Usage
+
+Running a backup is easy! After configuring everything just run the
+`dbbackup` script!
+
+Note that after decrypting and decompressing a backup you can restore it like
+so (this will prompt you for the user's password):
+
+```shell
+$ mysql -u user -p database < database.sql
+```
+
+### Crontab
+You might also find it helpful to run the backup as a cron job. Below is an
+example that runs the backup everyday at 0245, but you could obviously adjust
+it to suit your needs. I also have my s3 bucket set to delete backups older
+than three months. Assuming you have the script deployed to your home
+directory:
+
+```
+45 2 * * * cd /home/user/maria-backup && /home/user/maria-backup/dbbackup
+```
