@@ -22,3 +22,17 @@ DBS=('test_database')
 # You can list your buckets with `s3cmd ls`.
 BUCKET="your-backup-bucket"
 ```
+
+### `mysqldump`
+
+You also need to make sure that the username and password for the `mysqldump`
+user is configured in one of the standard locations: `/etc/my.cnf`,
+`/etc/mysql/my.cnf`, or `~/.my.cnf`. Currently, the script does no checking
+to make sure the values are set but if they aren't then `mysqldump` will
+obviously fail.
+
+```
+[mysqldump]
+user=backupuser
+password=backupuserpassword
+```
