@@ -49,7 +49,7 @@ user=backupuser
 password=backupuserpassword
 ```
 
-### MariDB/MySQL
+### MariaDB/MySQL
 
 I recommend setting up a separate user just for backing up your databases.
 This user will need the `SELECT` and `LOCK TABLES` permissions for every
