@@ -19,9 +19,15 @@
 # Get the local configuration
 source ~/.dbbackup
 
-if [[ -z ${PASSPHRASE+x} ]]; then
-    echo >&2 "You must configure an encryption password!"
-    exit 1
+if [[ -z ${RECIPIENTS} || ${#RECIPIENTS[@]} -lt 1 ]]; then
+    if [[ -z ${PASSPHRASE+x} ]]; then
+        echo >&2 "You must configure an encryption password!"
+        exit 1
+    else
+        ENC_MODE=2
+    fi
+else
+    ENC_MODE=1
 fi
 
 if [[ ${#DBS[@]} -lt 1 ]]; then
