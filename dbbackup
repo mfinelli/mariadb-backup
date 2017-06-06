@@ -79,8 +79,20 @@ for db in "${DBS[@]}"; do
     gzip --best "$db.sql"
     ls -lh | grep "$db.sql.gz"
 
-    gpg --cipher-algo AES256 --symmetric --yes --batch \
-        --passphrase="$PASSPHRASE" "$db.sql.gz"
+    if [[ $ENC_MODE -eq 1 ]]; then
+        # build up the gpg command with all of the recipients
+        cmd='gpg --always-trust -e'
+        for rec in "${RECIPIENTS[@]}"; do
+            cmd="$cmd -r $rec"
+        done
+        cmd="$cmd $db.sql.gz"
+
+        echo "$cmd"
+        $cmd
+    else
+        gpg --cipher-algo AES256 --symmetric --yes --batch \
+            --passphrase="$PASSPHRASE" "$db.sql.gz"
+    fi
 
     rm "$db.sql.gz"
 
