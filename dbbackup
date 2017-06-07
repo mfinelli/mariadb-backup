@@ -19,9 +19,15 @@
 # Get the local configuration
 source ~/.dbbackup
 
-if [[ -z ${PASSPHRASE+x} ]]; then
-    echo >&2 "You must configure an encryption password!"
-    exit 1
+if [[ -z ${RECIPIENTS} || ${#RECIPIENTS[@]} -lt 1 ]]; then
+    if [[ -z ${PASSPHRASE+x} ]]; then
+        echo >&2 "You must configure an encryption password!"
+        exit 1
+    else
+        ENC_MODE=2
+    fi
+else
+    ENC_MODE=1
 fi
 
 if [[ ${#DBS[@]} -lt 1 ]]; then
@@ -52,7 +58,6 @@ WORKDIR=$(mktemp -d) || { \
     echo >&2 "Could not create temporary directory."; exit 1; \
 }
 
-cd /tmp
 cd "$WORKDIR"
 
 for db in "${DBS[@]}"; do
@@ -74,8 +79,20 @@ for db in "${DBS[@]}"; do
     gzip --best "$db.sql"
     ls -lh | grep "$db.sql.gz"
 
-    gpg --cipher-algo AES256 --symmetric --yes --batch \
-        --passphrase="$PASSPHRASE" "$db.sql.gz"
+    if [[ $ENC_MODE -eq 1 ]]; then
+        # build up the gpg command with all of the recipients
+        cmd='gpg --always-trust -e'
+        for rec in "${RECIPIENTS[@]}"; do
+            cmd="$cmd -r $rec"
+        done
+        cmd="$cmd $db.sql.gz"
+
+        echo "$cmd"
+        $cmd
+    else
+        gpg --cipher-algo AES256 --symmetric --yes --batch \
+            --passphrase="$PASSPHRASE" "$db.sql.gz"
+    fi
 
     rm "$db.sql.gz"
 
