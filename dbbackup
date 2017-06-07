@@ -103,6 +103,7 @@ for db in "${DBS[@]}"; do
         --acl-private \
         --guess-mime-type \
         --server-side-encryption \
+        --no-preserve \
         "${db}.sql.gz.gpg" \
         s3://"$BUCKET"/"$saveas"
 
